@@ -1,17 +1,17 @@
 # Python 笔记
 
-重点：Special case 来源于理解的肤浅。深入的理解带来统一和简单。
+Special case 来源于理解的肤浅。深入的理解带来统一和简单。
 
 这个文件是总入口。正式笔记按主题拆分到 `notes/`，可执行实验放到 `labs/`，可复用代码片段放到 `snippets/`。
 
 ## 语言核心机制
 
 - [对象模型](notes/01-language-core/object-model.md)
-- 作用域与名字解析
-- 函数机制
-- 迭代协议
-- 上下文管理器
-- 异常机制
+- [作用域与名字解析](notes/01-language-core/scope-and-binding.md)
+- [函数机制](notes/01-language-core/functions.md)
+- [迭代协议](notes/01-language-core/iteration.md)
+- [上下文管理器](notes/01-language-core/context-manager.md)
+- [异常机制](notes/01-language-core/exceptions.md)
 
 ## 数据模型与魔术方法
 
