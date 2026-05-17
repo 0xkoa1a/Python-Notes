@@ -209,7 +209,7 @@ def numbers():
     yield 3
 
 g = numbers()
-print(g)
+print(g)        # <generator object numbers at 0x...>
 print(next(g))  # 1
 print(next(g))  # 2
 ```
@@ -286,6 +286,7 @@ xs = [x * x for x in range(10)]
 
 ```python
 total = sum(x * x for x in range(1_000_000))
+# Python 允许直接把生成器表达式放在函数调用里，省略外层的括号。
 ```
 
 这里不会先创建一百万个平方数的列表。

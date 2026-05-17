@@ -413,7 +413,7 @@ if flag is True:
 
 ## 8. 浅拷贝：复制外壳，共享内部对象
 
-浅拷贝创建一个新的外层容器，但内部元素仍然引用原来的对象。
+浅拷贝创建一个新的外层容器，但不会递归复制内部元素。内部元素仍然引用原来的对象。
 
 ```python
 import copy
@@ -471,16 +471,17 @@ print(d1)  # {'user': {'name': 'Bob'}}
 当元素是不可变对象时，浅拷贝通常足够：
 
 ```python
+# 不可变元素
 a = [1, 2, 3]
 b = a.copy()
 
-b.append(4)
+b[0] += 100
 
 print(a)  # [1, 2, 3]
-print(b)  # [1, 2, 3, 4]
+print(b)  # [101, 2, 3]
 ```
 
-因为整数对象本身不会被修改。这里真正需要隔离的是外层列表结构。
+因为整数对象本身不会被修改。这里实际上是创建一个新的 int 对象，再将 `b[0]` 重新绑定到这个新 `int` 对象。
 
 ## 9. 深拷贝：复制对象图
 
@@ -532,9 +533,9 @@ print(b[0] is inner) # False
 import copy
 
 a = []
-a.append(a)
+a.append(a)  # self-referential structure, [[...]]
 
-b = copy.deepcopy(a)
+b = copy.deepcopy(a)    # deepcopy 很聪明, 不会无限递归
 
 print(b is b[0])  # True
 print(a is b)     # False
@@ -772,7 +773,7 @@ add_item(a)
 print(a)  # [1]
 ```
 
-解释：列表的 `+=` 是原地扩展。
+解释：这里的 `+=` 修改原列表对象。
 
 ```python
 def add_text(s):
