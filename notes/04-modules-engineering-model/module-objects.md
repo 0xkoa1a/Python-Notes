@@ -32,7 +32,7 @@ print(math_utils.PI)
 print(math_utils.area(2))
 ```
 
-这里 `math_utils` 是一个名字，绑定到导入系统创建的模块对象。
+这里 `math_utils` 是一个名字，绑定到 `import` 系统创建的模块对象。
 
 模块对象里有一个命名空间，保存 `PI`、`area` 等顶层名字。
 
