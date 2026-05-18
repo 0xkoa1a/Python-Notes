@@ -201,7 +201,7 @@ class User:
     species = "human"
 
 u = User()
-print(u.species)  # 来自类对象，不在 u.__dict__ 中
+print(u.species)  # 来自类对象 User.__dict__，不在 u.__dict__ 中
 ```
 
 ## 7. 代理对象

@@ -30,24 +30,27 @@ Special case 来源于理解的肤浅。深入的理解带来统一和简单。
 ## 类与属性模型
 
 - [本层 README](notes/03-class-attribute-model/README.md)
-- 类对象与实例对象
-- 类属性与实例属性
-- 方法绑定
-- `property`
-- 继承与 MRO
-- `dataclass`
-- `abc` 与 `Protocol`
+- [类对象与实例对象](notes/03-class-attribute-model/class-and-instance-objects.md)
+- [类属性与实例属性](notes/03-class-attribute-model/class-and-instance-attributes.md)
+- [方法绑定与 `self`](notes/03-class-attribute-model/method-binding-and-self.md)
+- [`property`](notes/03-class-attribute-model/property.md)
+- [继承、MRO 与多重继承](notes/03-class-attribute-model/inheritance-and-mro.md)
+- [`dataclass`](notes/03-class-attribute-model/dataclass.md)
+- [`slots`](notes/03-class-attribute-model/slots.md)
+- [`abc` 与 `Protocol`](notes/03-class-attribute-model/abc-and-protocol.md)
 
 ## 模块、导入与工程模型
 
 - [本层 README](notes/04-modules-engineering-model/README.md)
-- 模块对象
-- import 机制
-- 包与 `__init__.py`
-- 脚本入口与 `python -m`
-- 循环导入
-- 项目结构
-- 测试、配置、日志、CLI
+- [模块对象](notes/04-modules-engineering-model/module-objects.md)
+- [`sys.path`](notes/04-modules-engineering-model/sys-path.md)
+- [`sys.modules`](notes/04-modules-engineering-model/sys-modules.md)
+- [包与 `__init__.py`](notes/04-modules-engineering-model/packages-and-init.md)
+- [绝对导入与相对导入](notes/04-modules-engineering-model/absolute-and-relative-imports.md)
+- [`python file.py` 与 `python -m package.module`](notes/04-modules-engineering-model/script-vs-module-execution.md)
+- [循环导入](notes/04-modules-engineering-model/circular-imports.md)
+- [项目结构](notes/04-modules-engineering-model/project-structure.md)
+- [测试、配置、日志与 CLI](notes/04-modules-engineering-model/tests-config-logging-cli.md)
 
 ## 类型标注与静态分析
 
