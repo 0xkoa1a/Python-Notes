@@ -2,74 +2,100 @@
 
 Special case 来源于理解的肤浅。深入的理解带来统一和简单。
 
-这个文件是总入口。正式笔记按主题拆分到 `notes/`，可执行实验放到 `labs/`，可复用代码片段放到 `snippets/`。
+这个文件是总入口。正式笔记按主题拆分到 `notes/`，可执行实验放到 `labs/`，阶段验收小项目放到 `projects/`，可复用代码片段放到 `snippets/`。
 
-## 语言核心机制
+## 运行时模型
 
-- [对象模型](notes/01-language-core/object-model.md)
-- [作用域与名字解析](notes/01-language-core/scope-and-binding.md)
-- [函数机制](notes/01-language-core/functions.md)
-- [迭代协议](notes/01-language-core/iteration.md)
-- [上下文管理器](notes/01-language-core/context-manager.md)
-- [异常机制](notes/01-language-core/exceptions.md)
+- [本层 README](notes/01-runtime-model/README.md)
+- [对象模型](notes/01-runtime-model/object-model.md)
+- [作用域与名字解析](notes/01-runtime-model/scope-and-binding.md)
+- [函数机制](notes/01-runtime-model/functions.md)
+- [迭代协议](notes/01-runtime-model/iteration.md)
+- [上下文管理器](notes/01-runtime-model/context-manager.md)
+- [异常机制](notes/01-runtime-model/exceptions.md)
 
-## 数据模型与魔术方法
+## 协议与数据模型
 
-- 特殊方法总览
-- 属性访问
+- [本层 README](notes/02-protocol-data-model/README.md)
+- 表示协议
+- 容器协议
+- 迭代协议与数据模型
+- 比较与哈希协议
+- 属性访问协议
 - 描述符协议
-- 类创建机制
+- 类创建协议
 
-## 面向对象的 Python 风格
+## 类与属性模型
 
+- [本层 README](notes/03-class-attribute-model/README.md)
+- 类对象与实例对象
 - 类属性与实例属性
-- 方法、property 与 dataclass
-- 继承、MRO 与组合
-- `abc` 与 `typing.Protocol`
+- 方法绑定
+- `property`
+- 继承与 MRO
+- `dataclass`
+- `abc` 与 `Protocol`
 
-## 类型标注与静态检查
+## 模块、导入与工程模型
 
+- [本层 README](notes/04-modules-engineering-model/README.md)
+- 模块对象
+- import 机制
+- 包与 `__init__.py`
+- 脚本入口与 `python -m`
+- 循环导入
+- 项目结构
+- 测试、配置、日志、CLI
+
+## 类型标注与静态分析
+
+- [本层 README](notes/05-typing-static-analysis/README.md)
 - 基础类型标注
 - 泛型
-- 结构化类型
-- 类型检查器
+- `Protocol`
+- `TypedDict`
+- 类型收窄
+- mypy / pyright
+- 渐进式类型系统
 
-## 标准库进阶
+## 标准库能力
 
-- `collections`
-- `itertools`
-- `functools`
-- `pathlib`
-- `subprocess`
-- `logging`
-- 并发相关标准库
+- [本层 README](notes/06-stdlib-capabilities/README.md)
+- 数据结构
+- 迭代与函数式工具
+- 路径、文件与系统
+- 文本与数据格式
+- 日志、配置与 CLI
+- 调试与检查
 
 ## 并发、异步与性能模型
 
+- [本层 README](notes/07-concurrency-performance/README.md)
 - GIL
+- CPU-bound 与 IO-bound
 - 线程、进程与 asyncio
-- 性能分析
-- C 扩展与系统边界
+- 任务、取消与超时
+- profiling
+- C / Rust extension 边界
 
-## 工程化与项目组织
+## 生态与项目实践
 
-- 项目结构
-- 包管理
-- 测试
-- CLI
-- 配置、日志与发布
-
-## 生态与实践专题
-
+- [本层 README](notes/08-ecosystem-projects/README.md)
 - NumPy / Pandas
-- Web 后端
-- 数据验证
-- 自动化脚本
-- 实验框架
+- PyTorch
+- FastAPI
+- SQLAlchemy
+- Pydantic
+- pytest
+- packaging
 
 ## 实验室
 
 `labs/` 用于放置 notebook 或临时实验。实验结论沉淀后，再回写到对应 Markdown 笔记。
+
+## 阶段项目
+
+`projects/` 用于放置每一层的综合练习。项目不追求大，但要能检验这一层的核心模型是否真的理解。
 
 ## 代码片段
 

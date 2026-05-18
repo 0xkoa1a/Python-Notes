@@ -341,6 +341,8 @@ with cm as f:
     process(f)
 ```
 
+它的 `__enter__` 直接返回 `default_file`，`__exit__` 什么都不做。
+
 ### `ExitStack`
 
 动态管理多个上下文：

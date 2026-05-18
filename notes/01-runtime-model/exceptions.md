@@ -12,8 +12,8 @@
 
 ```python
 err = ValueError("bad value")
-print(type(err))
-print(err.args)
+print(type(err))    # <class 'ValueError'>
+print(err.args)     # ('bad value',)
 ```
 
 抛出异常：
@@ -520,8 +520,11 @@ raise ExceptionGroup(
 try:
     ...
 except* ValueError as group:
+    # group 是只包含匹配到的 ValueError 的 ExceptionGroup 子组
+    # group.exceptions 是这个子组里具体异常对象组成的元组
     handle_values(group.exceptions)
 except* TypeError as group:
+    # 这里的 group 是只包含 TypeError 的 ExceptionGroup 子组
     handle_types(group.exceptions)
 ```
 
