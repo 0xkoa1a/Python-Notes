@@ -55,33 +55,41 @@ Special case 来源于理解的肤浅。深入的理解带来统一和简单。
 ## 类型标注与静态分析
 
 - [本层 README](notes/05-typing-static-analysis/README.md)
-- 基础类型标注
-- 泛型
-- `Protocol`
-- `TypedDict`
-- 类型收窄
-- mypy / pyright
-- 渐进式类型系统
+- [基础类型标注](notes/05-typing-static-analysis/basic-annotations.md)
+- [`None` 与可选类型](notes/05-typing-static-analysis/none-and-optional.md)
+- [泛型](notes/05-typing-static-analysis/generics.md)
+- [`Callable`](notes/05-typing-static-analysis/callable-types.md)
+- [`TypedDict`](notes/05-typing-static-analysis/typed-dict.md)
+- [`Protocol`](notes/05-typing-static-analysis/protocol.md)
+- [类型收窄](notes/05-typing-static-analysis/type-narrowing.md)
+- [mypy / pyright](notes/05-typing-static-analysis/mypy-and-pyright.md)
+- [渐进式类型系统](notes/05-typing-static-analysis/gradual-typing.md)
 
 ## 标准库能力
 
 - [本层 README](notes/06-stdlib-capabilities/README.md)
-- 数据结构
-- 迭代与函数式工具
-- 路径、文件与系统
-- 文本与数据格式
-- 日志、配置与 CLI
-- 调试与检查
+- [数据结构](notes/06-stdlib-capabilities/data-structures.md)
+- [迭代与函数式工具](notes/06-stdlib-capabilities/iteration-functional-tools.md)
+- [路径、文件与系统](notes/06-stdlib-capabilities/paths-files-system.md)
+- [进程与系统交互](notes/06-stdlib-capabilities/process-system-interaction.md)
+- [文本与数据格式](notes/06-stdlib-capabilities/text-data-formats.md)
+- [时间、随机与数学](notes/06-stdlib-capabilities/time-random-math.md)
+- [日志、配置与 CLI](notes/06-stdlib-capabilities/logging-config-cli.md)
+- [调试与检查](notes/06-stdlib-capabilities/debugging-inspection.md)
+- [测试辅助](notes/06-stdlib-capabilities/testing-helpers.md)
 
 ## 并发、异步与性能模型
 
 - [本层 README](notes/07-concurrency-performance/README.md)
-- GIL
-- CPU-bound 与 IO-bound
-- 线程、进程与 asyncio
-- 任务、取消与超时
-- profiling
-- C / Rust extension 边界
+- [GIL](notes/07-concurrency-performance/gil.md)
+- [CPU-bound 与 IO-bound](notes/07-concurrency-performance/cpu-bound-vs-io-bound.md)
+- [线程](notes/07-concurrency-performance/threading.md)
+- [进程](notes/07-concurrency-performance/multiprocessing.md)
+- [`asyncio`](notes/07-concurrency-performance/asyncio.md)
+- [task、取消、超时与异常传播](notes/07-concurrency-performance/tasks-cancellation-timeouts.md)
+- [profiling](notes/07-concurrency-performance/profiling.md)
+- [NumPy / PyTorch 的性能边界](notes/07-concurrency-performance/numpy-pytorch-boundaries.md)
+- [C / Rust extension](notes/07-concurrency-performance/c-rust-extension.md)
 
 ## 生态与项目实践
 

@@ -1,6 +1,6 @@
 # `property`
 
-`property` 让方法以属性形式暴露。它不是为了把 getter/setter 写成 Java 风格，而是为了在保持属性访问语义的同时，加入计算、校验、兼容和封装。
+`property` 让方法以属性形式暴露。它让程序员不必写 Java 风格的 getter/setter，而是为了在保持属性访问代码不变的同时，加入计算、校验、兼容和封装。
 
 **`property` 是描述符；读取属性时调用 getter，赋值时调用 setter，删除时调用 deleter。它让公开接口保持 `obj.name`，内部实现可以从裸字段演进为受控访问。**
 

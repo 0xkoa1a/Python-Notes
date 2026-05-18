@@ -4,14 +4,14 @@
 
 后续笔记建议覆盖：
 
-1. 基础类型标注
-2. `None` 与可选类型
-3. 泛型
-4. `Callable`
-5. `TypedDict`
-6. `Protocol`
-7. 类型收窄
-8. mypy / pyright
-9. 渐进式类型系统
+1. [基础类型标注](basic-annotations.md)
+2. [`None` 与可选类型](none-and-optional.md)
+3. [泛型](generics.md)
+4. [`Callable`](callable-types.md)
+5. [`TypedDict`](typed-dict.md)
+6. [`Protocol`](protocol.md)
+7. [类型收窄](type-narrowing.md)
+8. [mypy / pyright](mypy-and-pyright.md)
+9. [渐进式类型系统](gradual-typing.md)
 
 核心信念：类型标注是接口边界，不是运行时强制类型系统。
