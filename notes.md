@@ -2,7 +2,7 @@
 
 Special case 来源于理解的肤浅。深入的理解带来统一和简单。
 
-这个文件是总入口。正式笔记按主题拆分到 `notes/`，可执行实验放到 `labs/`，阶段验收小项目放到 `projects/`，可复用代码片段放到 `snippets/`。
+这个文件是总入口。正式笔记按主题拆分到 `notes/`，章节综合练习放到 `projects/`，可复用代码片段放到 `snippets/`。
 
 ## 运行时模型
 
@@ -102,13 +102,11 @@ Special case 来源于理解的肤浅。深入的理解带来统一和简单。
 - pytest
 - packaging
 
-## 实验室
-
-`labs/` 用于放置 notebook 或临时实验。实验结论沉淀后，再回写到对应 Markdown 笔记。
-
 ## 阶段项目
 
 `projects/` 用于放置每一层的综合练习。项目不追求大，但要能检验这一层的核心模型是否真的理解。
+
+- [第一章：Mini Pipeline](projects/01-runtime-model/mini_pipeline/README.md)
 
 ## 代码片段
 
