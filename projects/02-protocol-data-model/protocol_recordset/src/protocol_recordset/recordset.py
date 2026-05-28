@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from typing import TypeAlias, overload
+from copy import deepcopy
 
 Record: TypeAlias = dict[str, object]
 ReadonlyRecord: TypeAlias = Mapping[str, object]
@@ -27,7 +28,7 @@ class RecordSet:
         dictionaries.
         """
 
-        raise NotImplementedError("Implement RecordSet.__init__")
+        self._dict = [dict(deepcopy(r)) for r in records]
 
     def __repr__(self) -> str:
         """Return a debugging representation.
@@ -38,7 +39,7 @@ class RecordSet:
         logs or test failures, so it should expose useful structure.
         """
 
-        raise NotImplementedError("Implement RecordSet.__repr__")
+        return f"RecordSet: {self._dict.__repr__()}, len={self.__len__()}"
 
     def __len__(self) -> int:
         """Return the number of records.
@@ -49,7 +50,7 @@ class RecordSet:
         __bool__ is not defined.
         """
 
-        raise NotImplementedError("Implement RecordSet.__len__")
+        return self._dict.__len__()
 
     @overload
     def __getitem__(self, key: int) -> Record:
@@ -64,15 +65,16 @@ class RecordSet:
         ...
 
     def __getitem__(self, key: int | slice | str) -> Record | "RecordSet" | list[object]:
-        """Return a row, a sliced RecordSet, or a field column.
+        if isinstance(key, int):
+            return dict(self._dict[key])
 
-        TODO: Implement the container protocol.
+        if isinstance(key, slice):
+            return RecordSet(self._dict[key])
 
-        recordset[key] calls this method. key is an object supplied by Python:
-        int for row access, slice for slicing, and str for column access.
-        """
+        if isinstance(key, str):
+            return [record[key] for record in self._dict]
 
-        raise NotImplementedError("Implement RecordSet.__getitem__")
+        raise TypeError(f"Unsupported key type: {type(key).__name__}")
 
     def __iter__(self) -> Iterator[Record]:
         """Iterate over record copies.
@@ -83,7 +85,7 @@ class RecordSet:
         Each yielded record should be a copy, not the internal dictionary.
         """
 
-        raise NotImplementedError("Implement RecordSet.__iter__")
+        return deepcopy(self._dict).__iter__()
 
     def __contains__(self, item: object) -> bool:
         """Return whether item is one whole record in this RecordSet.
@@ -94,12 +96,12 @@ class RecordSet:
         not about whether a scalar appears in any field.
         """
 
-        raise NotImplementedError("Implement RecordSet.__contains__")
+        return self._dict.__contains__(item)
 
     def filter(self, predicate: Callable[[ReadonlyRecord], bool]) -> "RecordSet":
         """Return a new RecordSet containing records accepted by predicate."""
 
-        raise NotImplementedError("Implement RecordSet.filter")
+        return RecordSet(filter(predicate, self._dict))
 
     def __call__(self, predicate: Callable[[ReadonlyRecord], bool]) -> "RecordSet":
         """Filter this RecordSet by calling it like a function.
@@ -110,7 +112,7 @@ class RecordSet:
         that receives one record mapping and returns a truth value.
         """
 
-        raise NotImplementedError("Implement RecordSet.__call__")
+        return self.filter(predicate)
 
     def __eq__(self, other: object) -> bool:
         """Compare RecordSet objects by record content.
@@ -121,5 +123,6 @@ class RecordSet:
         returns NotImplemented. That is different from simply returning False.
         """
 
-        raise NotImplementedError("Implement RecordSet.__eq__")
-
+        if not isinstance(other, RecordSet):
+            return NotImplemented
+        return self._dict.__eq__(other._dict)
