@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Iterator, TextIO
+from collections.abc import Iterator
 
 from .errors import SourceOpenError
 
 
 @contextmanager
-def open_records(path: str | Path) -> Iterator[TextIO]:
+def open_records(path: str | Path) -> Iterator[str]:
     """Open a text file and yield an iterable line object.
 
     TODO: Implement this as a context manager.
@@ -23,9 +23,13 @@ def open_records(path: str | Path) -> Iterator[TextIO]:
     In that example, lines should be the open file object. If opening fails,
     raise SourceOpenError from the original OSError so __cause__ is preserved.
     """
-
-    raise NotImplementedError("Implement open_records(path)")
-
-    # This unreachable yield keeps the skeleton shaped like a generator-based
-    # context manager. Your implementation should yield the opened file object.
-    yield
+    
+    try:
+        lines = open(path, "r", encoding="utf-8")
+    except OSError as e:
+        raise SourceOpenError(f"Could not open file: {path}") from e
+    
+    try:
+        yield lines
+    finally:
+        lines.close()

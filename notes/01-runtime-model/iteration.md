@@ -35,7 +35,7 @@ next(it)  # StopIteration
 ```python
 class IteratorLike:
     def __iter__(self):
-        return self
+        return self    # 直接返回自己
 
     def __next__(self):
         ...
@@ -52,6 +52,8 @@ class IterableLike:
 关键区别：
 
 **可迭代对象负责产生迭代器；迭代器负责保存遍历状态并逐个产出元素。**
+
+**迭代器必须也是可迭代对象**，这样才能让 for 循环可以一视同仁地处理“容器”和“迭代器本身”。
 
 ## 2. `for` 循环的真实模型
 

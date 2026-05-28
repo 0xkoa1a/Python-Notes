@@ -24,13 +24,12 @@ class RecordParseError(PipelineError):
     raw_line should be the exact line object received from the input iterator.
     __cause__ should point at the lower-level parsing error when one exists.
     """
-
-    def __init__(self, message: str, *, line_number: int, raw_line: str) -> None:
-        # line_number is runtime context from the parsing loop, not a class-level value.
+    def __init__(self, *, line_number: int, raw_line: str) -> None:
         self.line_number = line_number
-
-        # raw_line is the original input object for this failing row.
         self.raw_line = raw_line
 
+        message = (
+            f"Failed to parse record at line {line_number}: "
+            f"{raw_line.rstrip()!r}"
+        )
         super().__init__(message)
-

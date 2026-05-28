@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from typing import TypeAlias
+from .errors import RecordParseError
 
 Record: TypeAlias = dict[str, object]
 Summary: TypeAlias = dict[str, object]
@@ -21,13 +22,23 @@ def parse_records(lines: Iterable[str]) -> Iterator[Record]:
     When parsing fails, raise RecordParseError with line_number and raw_line,
     and use `raise ... from exc` to preserve the underlying cause.
     """
+    for line_num, line in enumerate(lines, start=1):
+        try:
+            raw_line = line
 
-    raise NotImplementedError("Implement parse_records(lines)")
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
 
-    # This unreachable yield keeps the skeleton shaped like a generator.
-    # Your implementation should yield one parsed record at a time.
-    yield {}
+            name, score = map(str.strip, line.split(",", maxsplit=1))
+            score = int(score)
+            if not name:
+                raise ValueError("Name cannot be empty")
+            
+            yield {"name": name, "score": score}
 
+        except (ValueError, IndexError) as e:
+            raise RecordParseError(line_number=line_num, raw_line=raw_line) from e
 
 def filter_records(
     records: Iterable[Mapping[str, object]],
@@ -42,13 +53,10 @@ def filter_records(
     names from an outer scope, so this function should simply call it for each
     record instead of trying to inspect or cache its result.
     """
-
-    raise NotImplementedError("Implement filter_records(records, predicate)")
-
-    # This unreachable yield keeps the skeleton shaped like a lazy iterator.
-    # Your implementation should yield records only when predicate(record) is true.
-    yield {}
-
+    for record in records:
+        if not predicate(record):
+            continue
+        yield record
 
 def map_records(
     records: Iterable[Mapping[str, object]],
@@ -59,12 +67,8 @@ def map_records(
     TODO: Return a lazy iterator. transform should be called only when the
     returned iterator is consumed.
     """
-
-    raise NotImplementedError("Implement map_records(records, transform)")
-
-    # This unreachable yield keeps the skeleton shaped like a lazy iterator.
-    # Your implementation should yield transform(record) for each input record.
-    yield {}
+    for record in records:
+        yield transform(record)
 
 
 def collect_summary(records: Iterable[Mapping[str, object]]) -> Summary:
@@ -74,4 +78,17 @@ def collect_summary(records: Iterable[Mapping[str, object]]) -> Summary:
     default parameter to store names or running totals.
     """
 
-    raise NotImplementedError("Implement collect_summary(records)")
+    count = 0
+    total = 0
+    names = []
+    for record in records:
+        name, score = record["name"], record["score"]
+        count = count + 1
+        total = total + score
+        names.append(name)
+    return {
+        "count": count,
+        "total": total,
+        "average": total / count if count != 0 else None,
+        "names": names        
+    }
