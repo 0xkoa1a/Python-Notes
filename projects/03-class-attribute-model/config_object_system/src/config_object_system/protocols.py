@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Protocol
+from copy import deepcopy
 
 
 class SupportsConfigExport(Protocol):
@@ -21,5 +22,5 @@ def dump_config(config: SupportsConfigExport) -> dict[str, object]:
     to_dict method, which is what the Protocol expresses.
     """
 
-    raise NotImplementedError("Implement dump_config(config)")
+    return deepcopy(config.to_dict())
 

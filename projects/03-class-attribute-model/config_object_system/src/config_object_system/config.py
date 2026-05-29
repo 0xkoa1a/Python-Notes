@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from typing import Any, Self
+from copy import deepcopy
 
 from .errors import ValidationError
 
+_FIELDS = ("host", "port", "debug", "features")
 
 class AppConfig:
     """A hand-written configuration object with validated properties."""
@@ -18,14 +20,7 @@ class AppConfig:
     default_debug = False
     default_features: tuple[str, ...] = ()
 
-    def __init__(
-        self,
-        *,
-        host: str | None = None,
-        port: int | None = None,
-        debug: bool | None = None,
-        features: Iterable[str] | None = None,
-    ) -> None:
+    def __init__(self, **overrides: object) -> None:
         """Initialize instance state from arguments or class defaults.
 
         TODO: Use property setters so validation is shared by construction and
@@ -35,13 +30,20 @@ class AppConfig:
         default values should be read through self.default_* instead of hard-coded.
         """
 
-        raise NotImplementedError("Implement AppConfig.__init__")
+        unknown = set(overrides) - set(_FIELDS)
+        if unknown:
+            names = ", ".join(sorted(unknown))
+            raise TypeError(f"unknown config field: {names}")
+        
+        for name in _FIELDS:
+            value = overrides[name] if name in overrides else getattr(type(self), f"default_{name}")
+            setattr(self, name, value)
 
     @property
     def host(self) -> str:
         """Validated host string."""
 
-        raise NotImplementedError("Implement AppConfig.host getter")
+        return self._host
 
     @host.setter
     def host(self, value: str) -> None:
@@ -51,37 +53,37 @@ class AppConfig:
         __init__.
         """
 
-        raise NotImplementedError("Implement AppConfig.host setter")
+        self._host = validate_host(value)
 
     @property
     def port(self) -> int:
         """Validated TCP port."""
 
-        raise NotImplementedError("Implement AppConfig.port getter")
+        return self._port
 
     @port.setter
     def port(self, value: int) -> None:
         """Validate and store port."""
 
-        raise NotImplementedError("Implement AppConfig.port setter")
+        self._port = validate_port(value)
 
     @property
     def debug(self) -> bool:
         """Whether debug mode is enabled."""
 
-        raise NotImplementedError("Implement AppConfig.debug getter")
+        return self._debug
 
     @debug.setter
     def debug(self, value: bool) -> None:
         """Validate and store debug flag."""
 
-        raise NotImplementedError("Implement AppConfig.debug setter")
+        self._debug = validate_debug(value)
 
     @property
     def features(self) -> tuple[str, ...]:
         """Enabled feature names as an immutable tuple."""
 
-        raise NotImplementedError("Implement AppConfig.features getter")
+        return self._features
 
     @features.setter
     def features(self, value: Iterable[str]) -> None:
@@ -91,7 +93,7 @@ class AppConfig:
         mutable lists cannot become shared instance state.
         """
 
-        raise NotImplementedError("Implement AppConfig.features setter")
+        self._features = validate_features(value)
 
     def to_dict(self) -> dict[str, object]:
         """Return a JSON-friendly dictionary representation.
@@ -100,7 +102,12 @@ class AppConfig:
         should not mutate this AppConfig instance.
         """
 
-        raise NotImplementedError("Implement AppConfig.to_dict")
+        return deepcopy({
+            "host": self.host,
+            "port": self.port,
+            "debug": self.debug,
+            "features": list(self.features)
+        })
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Self:
@@ -112,7 +119,7 @@ class AppConfig:
         this method, cls should be DevelopmentConfig.
         """
 
-        raise NotImplementedError("Implement AppConfig.from_dict")
+        return cls(**data)
 
     def with_overrides(self, **changes: object) -> Self:
         """Return a new config object with selected fields replaced.
@@ -123,7 +130,9 @@ class AppConfig:
         subclass type when a DevelopmentConfig or ProductionConfig is overridden.
         """
 
-        raise NotImplementedError("Implement AppConfig.with_overrides")
+        d = self.to_dict()
+        d.update(changes)
+        return type(self).from_dict(d)
 
 
 class DevelopmentConfig(AppConfig):
@@ -148,23 +157,42 @@ def validate_host(value: object) -> str:
     TODO: Use this helper from AppConfig and DataclassAppConfig.
     """
 
-    raise ValidationError("Implement validate_host")
+    if type(value) is not str or not value.strip():
+        raise ValidationError("Invalid host")
+    return value.strip()
 
 
 def validate_port(value: object) -> int:
     """Validate port and return normalized value."""
 
-    raise ValidationError("Implement validate_port")
+    if type(value) is not int:
+        raise ValidationError("Port must be an integer")
+    if value < 1 or value > 65535:
+        raise ValidationError("Port must be in 1...65536")
+
+    return int(value)
 
 
 def validate_debug(value: object) -> bool:
     """Validate debug and return normalized value."""
 
-    raise ValidationError("Implement validate_debug")
+    if type(value) is not bool:
+        raise ValidationError("Debug must be a boolean value")
+    return bool(value)
 
 
 def validate_features(value: Iterable[object]) -> tuple[str, ...]:
     """Validate features and return an immutable tuple."""
 
-    raise ValidationError("Implement validate_features")
+    if not isinstance(value, Iterable):
+        raise ValidationError("features must be an iterable of strings")
+    
+    if isinstance(value, str | bytes):
+        raise ValidationError("features must be an iterable of feature names")
 
+    features = tuple(value)
+
+    if not all(isinstance(item, str) for item in features):
+        raise ValidationError("features must contain only strings")
+
+    return features

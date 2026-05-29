@@ -5,7 +5,9 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
+from .config import validate_host, validate_port, validate_debug, validate_features
 
+# dataclass 版本只保证构造后校验，不保证后续赋值校验。这正好展示了 dataclass 和 property 的差异
 @dataclass(slots=True)
 class DataclassAppConfig:
     """Dataclass version used to compare with the hand-written class."""
@@ -25,10 +27,17 @@ class DataclassAppConfig:
         validate values by themselves.
         """
 
-        raise NotImplementedError("Implement DataclassAppConfig.__post_init__")
+        self.host = validate_host(self.host)
+        self.port = validate_port(self.port)
+        self.debug = validate_debug(self.debug)
+        self.features = validate_features(self.features)
 
     def to_dict(self) -> dict[str, object]:
         """Return a JSON-friendly dictionary representation."""
 
-        raise NotImplementedError("Implement DataclassAppConfig.to_dict")
-
+        return {
+            "host": self.host,
+            "port": self.port,
+            "debug": self.debug,
+            "features": list(self.features),
+        }
