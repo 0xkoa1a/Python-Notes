@@ -125,6 +125,8 @@ class Version:
 
 `total_ordering` 让代码少一些，但生成的方法多一层调用。性能极端敏感时可以手写。
 
+`total_ordering` 通过布尔逻辑组合实现，是用来补全“布尔比较”的。Project 2 中的 `Field` 类不可以用 `total_ordering`，因为它返回的是一个延迟执行的查询对象，不是布尔值。
+
 ## 5. 哈希：`__hash__`
 
 对象能否放进 `set` 或作为 `dict` key，取决于它是否可哈希：

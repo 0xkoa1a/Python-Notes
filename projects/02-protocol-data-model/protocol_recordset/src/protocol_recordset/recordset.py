@@ -85,7 +85,8 @@ class RecordSet:
         Each yielded record should be a copy, not the internal dictionary.
         """
 
-        return deepcopy(self._dict).__iter__()
+        for d in self._dict:
+            yield dict(d)
 
     def __contains__(self, item: object) -> bool:
         """Return whether item is one whole record in this RecordSet.
@@ -101,7 +102,7 @@ class RecordSet:
     def filter(self, predicate: Callable[[ReadonlyRecord], bool]) -> "RecordSet":
         """Return a new RecordSet containing records accepted by predicate."""
 
-        return RecordSet(filter(predicate, self._dict))
+        return RecordSet(record for record in self if predicate(record))
 
     def __call__(self, predicate: Callable[[ReadonlyRecord], bool]) -> "RecordSet":
         """Filter this RecordSet by calling it like a function.

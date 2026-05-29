@@ -214,9 +214,16 @@ class Proxy:
         object.__setattr__(self, "_target", target)
 
     def __getattr__(self, name):
-        # target 是被代理对象；name 是当前代理对象找不到的属性
         target = object.__getattribute__(self, "_target")
-        return getattr(target, name)
+        return getattr(target, name)  # getattr 是 Python 内置函数，调用 target.__getattribute__(name)
+
+    def __setattr__(self, name, value):
+        # 代理对象的属性以 _ 开头，直接设置在代理对象上；其他属性转发给 target
+        if name.startswith("_"):
+            object.__setattr__(self, name, value)
+        else:
+            target = object.__getattribute__(self, "_target")
+            setattr(target, name, value)
 
 class Service:
     def run(self):
@@ -228,7 +235,6 @@ print(p.run())  # running
 
 这里 `p.run` 在代理对象上找不到，于是 `__getattr__` 把访问转发给 target。
 
-如果还要代理赋值，需要实现 `__setattr__`。但代理对象很容易让调试变复杂，必须谨慎设计。
 
 ## 8. 检查表
 

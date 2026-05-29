@@ -1,23 +1,6 @@
 # 描述符协议
 
-描述符是 Python 数据模型里最重要、也最容易被误解的一块。它解释了 `property`、方法绑定、`staticmethod`、`classmethod`、ORM 字段、校验字段等机制。
-
-先给一个直观定义：描述符就是 **放在类属性位置、专门接管某个属性读写删除行为的对象**。
-
-普通类属性只是一个值：
-
-```python
-class User:
-    name = "anonymous"
-```
-
-而描述符不是普通值，它更像一个“属性控制器”。当你访问 `user.name` 时，Python 不只是把 `name` 这个对象原样拿出来，而是会问这个控制器：这次读取应该返回什么？赋值应该怎么处理？删除应该怎么处理？
-
-这就是为什么 `property` 能把 `user.name` 这种属性访问变成函数调用，为什么普通方法能在 `user.method()` 时自动绑定 `self`，也为什么 ORM 可以把 `user.name` 映射到数据库字段。
-
 **只要一个对象定义了 `__get__`、`__set__` 或 `__delete__` 中的任意一个，并且它作为类属性存在，它就是描述符。**
-
-描述符不是“高级特性”，而是属性访问协议的核心组成部分。
 
 ## 1. 最小描述符
 
@@ -37,6 +20,13 @@ print(User.name) # value from descriptor
 ```
 
 访问 `u.name` 时，Python 发现 `name` 是类 `User` 上的描述符对象，于是调用描述符的 `__get__`。
+
+即以下两条语句是等价的：
+
+```python
+c.x
+c.__dict__["x"].__get__(c, C)
+```
 
 ## 2. `instance` 与 `owner`
 
@@ -105,31 +95,62 @@ print(c.x)  # from instance dict
 
 这条优先级规则解释了为什么实例属性可以遮蔽普通方法，但不能随便遮蔽 property。
 
-## 4. `property` 是数据描述符
+更具体来说，顺序是：数据描述符 => 实例字典 => 非数据描述符 => 普通类属性 => `__getattr__` 后备。
+
+## 4. `property`
+
+`property` 是 Python 内置的一种属性描述符，用来把“方法调用”伪装成“属性访问”。
+
+假设最初你写了一个普通类：
 
 ```python
 class User:
-    def __init__(self, name):
-        self._name = name
+    def __init__(self, age):
+        self.age = age
 
-    @property
-    def name(self):
-        # property 的 __get__ 会调用这个函数
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        # property 的 __set__ 会调用这个函数
-        if not value:
-            raise ValueError("name cannot be empty")
-        self._name = value
-
-u = User("Alice")
-print(u.name)
-u.name = "Bob"
+u = User(20)
+print(u.age)  # 20
 ```
 
-`property` 本质上是一个描述符对象。它作为类属性 `User.name` 存在，拦截实例上的 `u.name` 读写。
+后来你发现：age 不能随便赋值，必须大于等于 0。一种做法是改成 getter/setter 方法，但用户就必须这样调用：
+
+```python
+u.set_age(20)
+u.get_age()
+```
+
+`property` 本质上是一个数据描述符。它作为类属性 `User.name` 存在，拦截实例上的 `u.name` 读写。让外部仍然用属性语法，但内部可以加逻辑。
+
+```python
+class User:
+    def __init__(self, age):
+        self.age = age
+
+    @property
+    def age(self):
+        # 真实属性存在 _age 里，否则会无限递归
+        return self._age
+
+    @age.setter
+    def age(self, value):
+        if value < 0:
+            raise ValueError("age cannot be negative")
+        self._age = value
+```
+
+如果只写 getter，不写 setter：
+
+```python
+class Circle:
+    def __init__(self, radius):
+        self.radius = radius
+
+    @property
+    def area(self):
+        return 3.14159 * self.radius * self.radius
+```
+
+这里 area 是一个计算属性。它不像其他属性那样存在实例字典里，而是每次访问时动态计算。
 
 ## 5. 函数也是描述符
 
