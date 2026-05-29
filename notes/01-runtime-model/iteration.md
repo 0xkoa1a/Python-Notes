@@ -1,10 +1,10 @@
-# 迭代协议
+# 迭代运行时与生成器
 
-Python 的 `for` 循环不是“只能遍历列表”的语法糖。它背后是一套统一协议。
+Python 的 `for` 循环不是“只能遍历列表”的语法糖。它背后是一套运行时模型：`iter(obj)` 取得迭代器，`next(it)` 推动迭代器前进，生成器把函数调用变成可暂停、可恢复的数据流。
 
 **一个对象只要能被 `iter(obj)` 转换为迭代器，就能被 `for`、推导式、`list()`、`tuple()`、`sum()`、`any()`、`all()` 等消费。**
 
-迭代协议是 Python 协议式编程的核心入口之一。理解它以后，很多语言特性会统一起来。
+这一章重点放在运行时：迭代器如何保存状态、生成器如何暂停和恢复、惰性流水线为什么能成立。自定义类型如何完整实现 `__iter__`、`__next__`、`__reversed__` 等数据模型入口，会在第三章“自定义类型的迭代协议”中展开。
 
 ## 1. 可迭代对象与迭代器
 
@@ -146,59 +146,18 @@ def read_stream() -> Iterator[str]:
     ...
 ```
 
-## 4. 自定义可迭代对象
+## 4. 协议入口先建立直觉
 
-一个可重复遍历的对象通常让 `__iter__` 每次返回新的迭代器：
-
-```python
-class Countdown:
-    def __init__(self, start):
-        self.start = start
-
-    def __iter__(self):
-        n = self.start
-        while n > 0:
-            yield n
-            n -= 1
-
-for x in Countdown(3):
-    print(x)
-```
-
-这里 `__iter__` 是生成器函数。每次调用都会返回新的生成器对象，所以可以重复遍历：
+这一章只需要先抓住两个入口：
 
 ```python
-c = Countdown(3)
-print(list(c))  # [3, 2, 1]
-print(list(c))  # [3, 2, 1]
+it = iter(obj)   # 取得迭代器对象
+value = next(it) # 推动迭代器前进一步
 ```
 
-也可以手写迭代器类：
+自定义类型当然可以通过 `__iter__` 和 `__next__` 接入这套机制，但那属于数据模型设计问题。这里先把运行时直觉立住：**可迭代对象产生迭代器；迭代器保存遍历状态；生成器是最常见的迭代器来源之一。**
 
-```python
-class CountdownIterator:
-    def __init__(self, start):
-        self.current = start
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.current <= 0:
-            raise StopIteration
-        value = self.current
-        self.current -= 1
-        return value
-
-class Countdown:
-    def __init__(self, start):
-        self.start = start
-
-    def __iter__(self):
-        return CountdownIterator(self.start)
-```
-
-这个版本把“可迭代对象”和“迭代器”拆开了。
+完整的自定义容器实现、`__getitem__` fallback、`__reversed__` 等内容，见第三章 [自定义类型的迭代协议](../03-data-model-protocols/iteration-data-model.md)。
 
 ## 5. 生成器函数
 
@@ -567,4 +526,4 @@ def average(xs):
 5. `yield from` 委托给另一个可迭代对象。
 6. 惰性迭代能节省内存，但也带来一次性消费问题。
 
-迭代协议的美感在于：只要对象遵守一个小协议，它就能进入整个 Python 迭代生态。
+迭代运行时的美感在于：`for`、生成器、惰性流水线和一次性消费都不是 special case。它们都是同一套“取得迭代器，然后逐步推进”的模型。

@@ -9,7 +9,7 @@
 1. [对象模型](object-model.md)
 2. [作用域与名字解析](scope-and-binding.md)
 3. [函数机制](functions.md)
-4. [迭代协议](iteration.md)
+4. [迭代运行时与生成器](iteration.md)
 5. [上下文管理器](context-manager.md)
 6. [异常机制](exceptions.md)
 

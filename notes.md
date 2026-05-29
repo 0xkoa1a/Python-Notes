@@ -10,34 +10,34 @@ Special case 来源于理解的肤浅。深入的理解带来统一和简单。
 - [对象模型](notes/01-runtime-model/object-model.md)
 - [作用域与名字解析](notes/01-runtime-model/scope-and-binding.md)
 - [函数机制](notes/01-runtime-model/functions.md)
-- [迭代协议](notes/01-runtime-model/iteration.md)
+- [迭代运行时与生成器](notes/01-runtime-model/iteration.md)
 - [上下文管理器](notes/01-runtime-model/context-manager.md)
 - [异常机制](notes/01-runtime-model/exceptions.md)
 
-## 协议与数据模型
+## 类与对象模型
 
-- [本层 README](notes/02-protocol-data-model/README.md)
-- [表示协议](notes/02-protocol-data-model/representation-protocol.md)
-- [布尔与长度协议](notes/02-protocol-data-model/truth-length-protocol.md)
-- [容器协议](notes/02-protocol-data-model/container-protocol.md)
-- [迭代协议与数据模型](notes/02-protocol-data-model/iteration-data-model.md)
-- [调用协议](notes/02-protocol-data-model/call-protocol.md)
-- [比较与哈希协议](notes/02-protocol-data-model/comparison-hash-protocol.md)
-- [属性访问协议](notes/02-protocol-data-model/attribute-access-protocol.md)
-- [描述符协议](notes/02-protocol-data-model/descriptor-protocol.md)
-- [对象创建与类创建协议](notes/02-protocol-data-model/object-class-creation.md)
+- [本层 README](notes/02-class-object-model/README.md)
+- [类对象与实例对象](notes/02-class-object-model/class-and-instance-objects.md)
+- [类属性与实例属性](notes/02-class-object-model/class-and-instance-attributes.md)
+- [方法绑定与 `self`](notes/02-class-object-model/method-binding-and-self.md)
+- [`property`](notes/02-class-object-model/property.md)
+- [继承、MRO 与多重继承](notes/02-class-object-model/inheritance-and-mro.md)
+- [`dataclass`](notes/02-class-object-model/dataclass.md)
+- [`slots`](notes/02-class-object-model/slots.md)
+- [`abc` 与 `Protocol`](notes/02-class-object-model/abc-and-protocol.md)
 
-## 类与属性模型
+## 数据模型协议
 
-- [本层 README](notes/03-class-attribute-model/README.md)
-- [类对象与实例对象](notes/03-class-attribute-model/class-and-instance-objects.md)
-- [类属性与实例属性](notes/03-class-attribute-model/class-and-instance-attributes.md)
-- [方法绑定与 `self`](notes/03-class-attribute-model/method-binding-and-self.md)
-- [`property`](notes/03-class-attribute-model/property.md)
-- [继承、MRO 与多重继承](notes/03-class-attribute-model/inheritance-and-mro.md)
-- [`dataclass`](notes/03-class-attribute-model/dataclass.md)
-- [`slots`](notes/03-class-attribute-model/slots.md)
-- [`abc` 与 `Protocol`](notes/03-class-attribute-model/abc-and-protocol.md)
+- [本层 README](notes/03-data-model-protocols/README.md)
+- [表示协议](notes/03-data-model-protocols/representation-protocol.md)
+- [布尔与长度协议](notes/03-data-model-protocols/truth-length-protocol.md)
+- [容器协议](notes/03-data-model-protocols/container-protocol.md)
+- [自定义类型的迭代协议](notes/03-data-model-protocols/iteration-data-model.md)
+- [调用协议](notes/03-data-model-protocols/call-protocol.md)
+- [比较与哈希协议](notes/03-data-model-protocols/comparison-hash-protocol.md)
+- [属性访问协议](notes/03-data-model-protocols/attribute-access-protocol.md)
+- [描述符协议](notes/03-data-model-protocols/descriptor-protocol.md)
+- [对象创建与类创建协议](notes/03-data-model-protocols/object-class-creation.md)
 
 ## 模块、导入与工程模型
 

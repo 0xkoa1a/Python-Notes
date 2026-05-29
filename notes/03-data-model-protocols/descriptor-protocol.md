@@ -97,60 +97,26 @@ print(c.x)  # from instance dict
 
 更具体来说，顺序是：数据描述符 => 实例字典 => 非数据描述符 => 普通类属性 => `__getattr__` 后备。
 
-## 4. `property`
+## 4. `property` 在这里的位置
 
-`property` 是 Python 内置的一种属性描述符，用来把“方法调用”伪装成“属性访问”。
+`property` 的使用方式、setter 校验、兼容性演进和缓存属性，已经在第二章 [`property`](../02-class-object-model/property.md) 中作为 OOP 工具讲过。这里不重复那些设计建议，只看它在描述符协议里的位置。
 
-假设最初你写了一个普通类：
-
-```python
-class User:
-    def __init__(self, age):
-        self.age = age
-
-u = User(20)
-print(u.age)  # 20
-```
-
-后来你发现：age 不能随便赋值，必须大于等于 0。一种做法是改成 getter/setter 方法，但用户就必须这样调用：
-
-```python
-u.set_age(20)
-u.get_age()
-```
-
-`property` 本质上是一个数据描述符。它作为类属性 `User.name` 存在，拦截实例上的 `u.name` 读写。让外部仍然用属性语法，但内部可以加逻辑。
+**`property` 是数据描述符。** 它作为类属性存在，读取实例属性时调用 getter，赋值时调用 setter，删除时调用 deleter。也正因为它是数据描述符，所以优先级高于实例字典。
 
 ```python
 class User:
-    def __init__(self, age):
-        self.age = age
-
     @property
-    def age(self):
-        # 真实属性存在 _age 里，否则会无限递归
-        return self._age
+    def name(self):
+        # 访问 user.name 时，property.__get__ 会调用这个 getter。
+        return self._name
 
-    @age.setter
-    def age(self, value):
-        if value < 0:
-            raise ValueError("age cannot be negative")
-        self._age = value
+    @name.setter
+    def name(self, value):
+        # 给 user.name 赋值时，property.__set__ 会调用这个 setter。
+        self._name = value
 ```
 
-如果只写 getter，不写 setter：
-
-```python
-class Circle:
-    def __init__(self, radius):
-        self.radius = radius
-
-    @property
-    def area(self):
-        return 3.14159 * self.radius * self.radius
-```
-
-这里 area 是一个计算属性。它不像其他属性那样存在实例字典里，而是每次访问时动态计算。
+在描述符视角下，`property` 不是特殊语法魔法，而是内置描述符对象。它说明了一件事：**点号属性访问可以被类上的对象接管。**
 
 ## 5. 函数也是描述符
 

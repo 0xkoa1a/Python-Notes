@@ -208,6 +208,8 @@ print(User.__dict__["name"])  # property 对象
 
 这解释了为什么 property 能拦截读取和赋值，也解释了为什么它能优先于实例字典。
 
+这一节只需要知道 `property` 的底层身份是描述符。描述符协议本身，包括 `__get__`、`__set__`、数据描述符优先级和方法绑定，会在第三章 [描述符协议](../03-data-model-protocols/descriptor-protocol.md) 中系统展开。
+
 ## 9. 检查表
 
 设计 property 时，按下面问：

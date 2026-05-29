@@ -11,8 +11,8 @@ Special case 来源于理解的肤浅。深入的理解带来统一和简单。
 ```text
 notes/
 ├─ 01-runtime-model/
-├─ 02-protocol-data-model/
-├─ 03-class-attribute-model/
+├─ 02-class-object-model/
+├─ 03-data-model-protocols/
 ├─ 04-modules-engineering-model/
 ├─ 05-typing-static-analysis/
 ├─ 06-stdlib-capabilities/
@@ -31,7 +31,7 @@ notes/
 - 对象模型：对象、身份、类型、值、引用、可变性、浅拷贝、深拷贝。
 - 名字模型：命名空间、绑定、LEGB、闭包、`global`、`nonlocal`、late binding。
 - 函数模型：函数对象、调用帧、参数绑定、默认参数、函数属性、装饰器。
-- 迭代模型：可迭代对象、迭代器、生成器、惰性计算、`yield from`。
+- 迭代运行时：可迭代对象、迭代器、生成器、惰性计算、`yield from`。
 - 资源模型：`with`、上下文管理器、`__enter__`、`__exit__`、`contextlib`。
 - 异常模型：异常对象、传播、匹配、异常链、`raise from`、`finally` 收束。
 
@@ -47,32 +47,11 @@ notes/
 
 阶段项目：写一个 mini 数据处理 pipeline：文件读取使用上下文管理器，数据流使用生成器，错误使用自定义异常和异常链表达。
 
-## 第二层：协议与数据模型
+## 第二层：类与对象模型
 
-目标：理解 Python 如何用协议把语法连接到对象行为。
+目标：先理解 Python 的类、实例、属性、方法和继承，再进入各种魔术方法。
 
-这一层不要按“魔术方法表”死背，而要按协议分组：
-
-- 表示协议：`__repr__`、`__str__`、`__format__`。
-- 布尔与长度协议：`__bool__`、`__len__`。
-- 容器协议：`__contains__`、`__getitem__`、`__setitem__`、切片。
-- 迭代协议：`__iter__`、`__next__`。
-- 调用协议：`__call__`。
-- 比较协议：`__eq__`、`__lt__` 等。
-- 哈希协议：`__hash__` 与不可变性。
-- 上下文协议：`__enter__`、`__exit__`。
-- 属性访问协议：`__getattr__`、`__getattribute__`、`__setattr__`。
-- 描述符协议：`__get__`、`__set__`、`__delete__`。
-- 对象创建协议：`__new__`、`__init__`。
-- 类创建协议：metaclass、`__init_subclass__`、class decorator。
-
-核心信念：**Python 的多态不是主要靠继承层次，而是靠对象是否实现某个协议。语法调用协议，协议调用对象。**
-
-阶段项目：写一个小型 `RecordSet` 容器，支持 repr、长度、索引、切片、迭代、过滤和比较。
-
-## 第三层：类与属性模型
-
-目标：理解 Python 的类不是静态模板，而是运行时对象、命名空间和协议容器。
+这一层建立 Python OOP 的日常模型：
 
 重点包括：
 
@@ -86,11 +65,33 @@ notes/
 - `dataclass`。
 - `slots`。
 - `abc` 与抽象基类。
-- `typing.Protocol` 与结构化接口。
+- `typing.Protocol` 与结构化接口的运行时位置。
 
 核心信念：**Python 的类首先是运行时对象，其次才是“类型模板”。属性查找、方法绑定、描述符和 MRO 构成了 Python OOP 的真实模型。**
 
 阶段项目：写一个配置对象系统：支持默认值、属性校验、继承覆盖、序列化，并比较手写类、`dataclass`、`Protocol` 的取舍。
+
+## 第三层：数据模型协议
+
+目标：理解 Python 如何用协议把语法连接到对象行为。
+
+这一层建立在第二层的类模型之上。不要按“魔术方法表”死背，而要按协议分组：
+
+- 表示协议：`__repr__`、`__str__`、`__format__`。
+- 布尔与长度协议：`__bool__`、`__len__`。
+- 容器协议：`__contains__`、`__getitem__`、`__setitem__`、切片。
+- 自定义类型的迭代协议：`__iter__`、`__next__`、`__reversed__`、`__getitem__` fallback。
+- 调用协议：`__call__`。
+- 比较协议：`__eq__`、`__lt__` 等。
+- 哈希协议：`__hash__` 与不可变性。
+- 属性访问协议：`__getattr__`、`__getattribute__`、`__setattr__`。
+- 描述符协议：`__get__`、`__set__`、`__delete__`。
+- 对象创建协议：`__new__`、`__init__`。
+- 类创建协议：metaclass、`__init_subclass__`、class decorator。
+
+核心信念：**Python 的多态不是主要靠继承层次，而是靠对象是否实现某个协议。语法调用协议，协议调用对象。**
+
+阶段项目：写一个小型 `RecordSet` 容器，支持 repr、长度、索引、切片、迭代、过滤和比较。
 
 ## 第四层：模块、导入与工程模型
 
